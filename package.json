@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "primitive tool for cgminer log quirying and interpreting",
   "main": "index.js",
+  "type":"module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

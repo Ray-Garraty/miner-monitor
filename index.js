@@ -1,21 +1,12 @@
-const net = require('net');
-// const Client = require('cgminer-api').client;
+import net from 'net';
+import { convertBufferToObject, extractStatsString, formatStatsString } from './parser.js';
 
 const host = '192.168.1.102';
 const port = 4028;
-// const cgminer = new Client({host, port});
 
-// const command = 'stats';
-const command = 'ascset';
-const args = [0, 'fan-spd', '86-100'];
-
-const parseStatsBuffer = (rawData) => {
-  const object = JSON.parse(rawData
-    .replace(/\-nan/g, '0')
-    .replace(/[^\x00-\x7F]/g, '')
-    .replace(/[^\}]+$/, ''));
-  return object.STATS[0]['MM ID0'];
-};
+const command = 'stats';
+// const command = 'ascset';
+const args = [0, 'fan-spd', '87-100'];
 
 const main = async () => {
   const socket = await net.connect({host, port});
@@ -26,7 +17,20 @@ const main = async () => {
   });
   
   socket.on('end', () => {
-    console.log(buffer);
+    const obj = convertBufferToObject(buffer);
+    const { STATUS, STATS } = obj;
+    const responseCode = STATUS[0].STATUS;
+    const responseMessage = STATUS[0].Msg;
+    if (responseCode === 'S') {
+      console.log('Успешно');
+    } else {
+      console.log('Произошла ошибка: ', responseMessage);
+    };
+    if (STATS) {
+      const result = extractStatsString(STATS);
+      console.log(result);
+      // console.log(formatStatsString(result));
+    }
   });
 
   await socket.write(JSON.stringify({ command, parameter: args.join(',')}));
