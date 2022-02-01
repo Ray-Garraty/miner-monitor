@@ -1,4 +1,6 @@
 /* eslint-disable no-control-regex */
+import splitPVT from "./splitPVT.js";
+
 const convertBufferToObject = (rawData) => JSON.parse(rawData
     .replace(/-nan/g, '0')
     .replace(/[^\x00-\x7F]/g, '')
@@ -12,22 +14,6 @@ const formatStatsString = (logString) => {
   const parseParameter = (parameterName) => {
     const [parameterString] = logArray.filter((element) => element.startsWith(parameterName));
     return parameterString.split('[');
-  };
-
-  const splitPVT = (name, values) => {
-    // console.log(values);
-    const valuesArray = values.split(';');
-    const splitPeriod = 6;
-    const result = valuesArray
-      .map((value, i, arr) => {
-        if ((i + 1) % splitPeriod === 0) {
-          return [name, ...arr.slice(i - splitPeriod + 1, i + 1)];
-        }
-      })
-      .filter(x => x)
-      .map(([name, ...values]) => [name, values.join(';')]);
-    // console.log('На выходе splitPVT: ', result);
-    return result;
   };
 
   const parameters = [

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "primitive tool for cgminer log quirying and interpreting",
   "main": "index.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,5 +25,8 @@
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-functional": "^4.1.1",
     "eslint-plugin-import": "^2.25.4"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
   }
 }
