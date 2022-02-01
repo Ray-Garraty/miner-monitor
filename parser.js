@@ -1,5 +1,24 @@
 /* eslint-disable no-control-regex */
+import fs from 'fs';
+import { csvFilePath } from './index.js';
 import splitPVT from "./splitPVT.js";
+import requestOutdoorTemp from './weather.js';
+
+const readLastTempFromCSV = (filePath) => {
+  const fileData = fs.readFileSync(filePath, 'utf8');
+  const dataArray = fileData.split('\n');
+  return dataArray.find((element) => element.startsWith('OutdoorTemp')).split(';')[1];
+};
+
+const getOutdoorTemp = (lastRequestDateTomeInMs) => {
+  return requestOutdoorTemp();
+  /* const currentDateTimeInMs = Date.now();
+  const minRequestInterval = 28800000; // 8 hours
+  if ((currentDateTimeInMs - lastRequestDateTomeInMs) > minRequestInterval) {
+    return requestOutdoorTemp();
+  }
+  return lastTemp; */
+};
 
 const convertBufferToObject = (rawData) => JSON.parse(rawData
     .replace(/-nan/g, '0')
@@ -8,7 +27,10 @@ const convertBufferToObject = (rawData) => JSON.parse(rawData
 
 const extractStatsString = (object) => object[0]['MM ID0'];
 
-const formatStatsString = (logString) => {
+
+
+const formatStatsString = async (logString) => {
+  const outdoorTemp = await getOutdoorTemp();
   const logArray = logString.split(']').map((entry) => entry.trim());
   
   const parseParameter = (parameterName) => {
@@ -91,6 +113,9 @@ const formatStatsString = (logString) => {
   .reduce(reducer, [])
   .map((entry) => entry.join(';'))
   .map((entry, i, array) => {
+    if (array[i + 1] && array[i + 1].startsWith('Temp')) {
+      return `${entry}\n\nOutdoorTemp;${outdoorTemp}`;
+    }    
     if (!entry.startsWith('PVT_T') && array[i + 1].startsWith('PVT_T1')) {
       return `${entry}\n`;
     }
