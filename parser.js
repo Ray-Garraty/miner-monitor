@@ -1,6 +1,5 @@
 /* eslint-disable no-control-regex */
 import fs from 'fs';
-import { csvFilePath } from './index.js';
 import splitPVT from "./splitPVT.js";
 import requestOutdoorTemp from './weather.js';
 
@@ -27,7 +26,14 @@ const convertBufferToObject = (rawData) => JSON.parse(rawData
 
 const extractStatsString = (object) => object[0]['MM ID0'];
 
-
+const formatDataForLog = (data) => {
+  const result = data
+  .split('\nPVT_T1')[0]
+  .split('TIMESTAMP;;;;;;;;;')[1]
+  .replace(/;/g, ' ')
+  .replace(/\n\n/g, '\n');
+  return result;
+};
 
 const formatStatsString = async (logString) => {
   const outdoorTemp = await getOutdoorTemp();
@@ -131,4 +137,9 @@ const formatStatsString = async (logString) => {
   return [`TIMESTAMP;;;;;;;;;${timeStamp}`, ...normalizedEntries].join('\n');
 };
 
-export { convertBufferToObject, extractStatsString, formatStatsString };
+export {
+  convertBufferToObject,
+  extractStatsString,
+  formatStatsString,
+  formatDataForLog,
+};

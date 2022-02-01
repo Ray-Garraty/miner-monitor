@@ -1,11 +1,18 @@
 import fs from 'fs';
 import net from 'net';
-import { convertBufferToObject, extractStatsString, formatStatsString } from './parser.js';
+import {
+  convertBufferToObject,
+  extractStatsString,
+  formatStatsString,
+  formatDataForLog,
+} from './parser.js';
 
 const host = '192.168.1.102';
 const port = 4028;
 const interval = 600000;
-export const csvFilePath = 'C:/Users/vlbes/Desktop/log.csv';
+const statsFilePath = 'C:/Users/vlbes/OneDrive/Майнинг/Avalon 1066/192.168.1.102_stats.csv';
+const logFilePath = 'C:/Users/vlbes/OneDrive/Майнинг/Avalon 1066/192.168.1.102_logs.csv';
+const logBlocksSeparator = ''.padEnd(25, '=');
 
 const command = 'stats';
 // const command = 'ascset';
@@ -25,18 +32,23 @@ const main = async () => {
     const responseCode = STATUS[0].STATUS;
     const responseMessage = STATUS[0].Msg;
     if (responseCode === 'S') {
-      console.log('Получен ответ от майнера');
+      console.log('Ответ майнера получен');
     } else {
-      console.log('Произошла ошибка: ', responseMessage);
+      console.log('Ошибка запроса данных у майнера: ', responseMessage);
     }
     if (STATS) {
       const result = extractStatsString(STATS);
       const data = await formatStatsString(result);
-      fs.writeFile(csvFilePath, data, (err) => {
+      fs.writeFile(statsFilePath, data, (err) => {
         if (err) {
-          console.log('Ошибка записи лога в csv-файл: ', err);
+          console.log('Ошибка записи статистики в файл: ', err);
         } else {
-          console.log('Данные сохранены в csv-файл ', (new Date).toString().split('GMT')[0]);
+          console.log((new Date).toString().split('GMT')[0]);
+          console.log('Файл перезаписан:', statsFilePath);
+          const logStream = fs.createWriteStream(logFilePath, {flags: 'a'});
+          logStream.write(formatDataForLog(data));
+          logStream.end(`${logBlocksSeparator}\n`);
+          console.log('Данные добавлены в файл:', logFilePath);
           setTimeout(() => main(), interval);
         }
       });
