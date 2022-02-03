@@ -11,7 +11,7 @@ const host = '192.168.1.102';
 const port = 4028;
 const interval = 1800000;
 const statsFilePath = 'C:/Users/vlbes/OneDrive/Майнинг/Avalon 1066/192.168.1.102_stats.csv';
-const logFilePath = 'C:/Users/vlbes/OneDrive/Майнинг/Avalon 1066/192.168.1.102_logs.csv';
+const logFilePath = 'C:/Users/vlbes/OneDrive/Майнинг/Avalon 1066/192.168.1.102_logs.txt';
 const logBlocksSeparator = ''.padEnd(25, '=');
 
 const command = 'stats';

@@ -5,7 +5,7 @@ const host = '192.168.1.102';
 const port = 4028;
 
 const command = 'ascset';
-const args = [0, 'enable_privilege', 0];
+const args = [0, 'fan-spd', 70];
 
 const main = async () => {
   const socket = await net.connect({host, port});
@@ -21,7 +21,7 @@ const main = async () => {
     const responseCode = STATUS[0].STATUS;
     const responseMessage = STATUS[0].Msg;
     if (responseCode === 'S') {
-      console.log('Ответ майнера получен', responseMessage);
+      console.log('Ответ майнера получен: ', responseMessage);
     } else {
       console.log('Ошибка запроса данных у майнера: ', responseMessage);
     }
