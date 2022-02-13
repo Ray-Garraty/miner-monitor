@@ -7,11 +7,11 @@ import {
   formatDataForLog,
 } from './parser.js';
 
-const host = '192.168.1.102';
-const port = 4028;
+export const host = '192.168.1.100';
+export const port = 4028;
 const interval = 1800000;
-const statsFilePath = 'C:/Users/vlbes/OneDrive/Майнинг/Avalon 1066/192.168.1.102_stats.csv';
-const logFilePath = 'C:/Users/vlbes/OneDrive/Майнинг/Avalon 1066/192.168.1.102_logs.txt';
+const statsFilePath = `C:/Users/vlbes/OneDrive/Майнинг/Avalon 1066/${host}_stats.csv`;
+const logFilePath = `C:/Users/vlbes/OneDrive/Майнинг/Avalon 1066/${host}_logs.txt`;
 const logBlocksSeparator = ''.padEnd(25, '=');
 
 const command = 'stats';

@@ -40,8 +40,15 @@ const formatStatsString = async (logString) => {
   const logArray = logString.split(']').map((entry) => entry.trim());
   
   const parseParameter = (parameterName) => {
-    const [parameterString] = logArray.filter((element) => element.startsWith(parameterName));
-    return parameterString.split('[');
+    try {
+      const [parameterString] = logArray.filter((element) => element.startsWith(parameterName));
+      const result = parameterString.split('[');
+      return result;
+    }
+    catch (error) {
+      console.log('Проблема при парсинге параметра ', parameterName);
+      console.log('Содержимое массива: ', logArray);
+    }
   };
 
   const parameters = [
@@ -49,7 +56,7 @@ const formatStatsString = async (logString) => {
     'NETFAIL',
     'WORKMODE',
     'ADJ',
-    'MPO',
+    'Freq',
     'Elapsed',
     'BOOTBY',
     'MH',

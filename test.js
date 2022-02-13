@@ -1,11 +1,10 @@
 import net from 'net';
 import { convertBufferToObject } from './parser.js';
-
-const host = '192.168.1.102';
-const port = 4028;
+import { host, port } from './index.js';
 
 const command = 'ascset';
-const args = [0, 'fan-spd', 70];
+// const args = [0, 'hashpower', 0];
+const args = [0, 'fan-spd', '91-100'];
 
 const main = async () => {
   const socket = await net.connect({host, port});
