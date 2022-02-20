@@ -106,7 +106,7 @@ const formatStatsString = async (logString) => {
     if(name.startsWith('BOOTBY')) {
       return [...acc, [name, value.slice(2, 4)]];
     }
-    if(name.startsWith('DH')) {
+    if(name.startsWith('DH') || name.startsWith('Freq')) {
       const n = value.slice(0, -1).replace('.', ',');
       return [...acc, [name, n]];
     }

@@ -7,19 +7,21 @@ import {
   formatDataForLog,
 } from './parser.js';
 
-export const host = '192.168.1.100';
+export const hostsIPs = [
+  '192.168.1.7',
+  '192.168.1.8',
+];
 export const port = 4028;
+const localPath = 'C:/Users/Vladimir/Google Drive/Avalon 1066/';
 const interval = 1800000;
-const statsFilePath = `C:/Users/vlbes/OneDrive/Майнинг/Avalon 1066/${host}_stats.csv`;
-const logFilePath = `C:/Users/vlbes/OneDrive/Майнинг/Avalon 1066/${host}_logs.txt`;
 const logBlocksSeparator = ''.padEnd(25, '=');
 
 const command = 'stats';
-// const command = 'ascset';
-const args = [0, 'fan-spd', '87-100'];
 
-const main = async () => {
-  const socket = await net.connect({host, port});
+const main = async (hostIP) => {
+  const statsFilePath = `${localPath}${hostIP}_stats.csv`;
+  const logFilePath = `${localPath}${hostIP}_logs.txt`;
+  const socket = await net.connect({host: hostIP, port});
   let buffer = '';
   
   socket.on('data', (data) => {
@@ -31,10 +33,10 @@ const main = async () => {
     const { STATUS, STATS } = obj;
     const responseCode = STATUS[0].STATUS;
     const responseMessage = STATUS[0].Msg;
-    if (responseCode === 'S') {
-      console.log('Ответ майнера получен');
+    if (responseCode === 'S' || responseCode === 'I') {
+      console.log('Ответ майнера', hostIP,'получен');
     } else {
-      console.log('Ошибка запроса данных у майнера: ', responseMessage);
+      console.log('Ошибка запроса данных у майнера: ', hostIP, responseMessage);
     }
     if (STATS) {
       const result = extractStatsString(STATS);
@@ -55,7 +57,7 @@ const main = async () => {
     }
   });
 
-  await socket.write(JSON.stringify({ command, parameter: args.join(',')}));
+  await socket.write(JSON.stringify({ command }));
 };
 
-main();
+Promise.all([hostsIPs.map((ip) => main(ip))]);

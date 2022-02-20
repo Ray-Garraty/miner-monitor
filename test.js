@@ -4,7 +4,7 @@ import { host, port } from './index.js';
 
 const command = 'ascset';
 // const args = [0, 'hashpower', 0];
-const args = [0, 'fan-spd', '91-100'];
+const args = [0, 'fan-spd', '46-100'];
 
 const main = async () => {
   const socket = await net.connect({host, port});
@@ -19,7 +19,7 @@ const main = async () => {
     const { STATUS } = obj;
     const responseCode = STATUS[0].STATUS;
     const responseMessage = STATUS[0].Msg;
-    if (responseCode === 'S') {
+    if (responseCode === 'S' || responseCode === 'I') {
       console.log('Ответ майнера получен: ', responseMessage);
     } else {
       console.log('Ошибка запроса данных у майнера: ', responseMessage);

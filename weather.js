@@ -16,4 +16,5 @@ export default () => axios
   })
   .catch((error) => {
     console.log('Ошибка при запросе погоды с Яндекса: ', error);
+    return 99;
   });
