@@ -1,12 +1,7 @@
 import net from 'net';
 import { convertBufferToObject } from './parser.js';
-import { host, port } from './index.js';
 
-const command = 'ascset';
-// const args = [0, 'hashpower', 0];
-const args = [0, 'fan-spd', '46-100'];
-
-const main = async () => {
+export default async (host, port, command, args) => {
   const socket = await net.connect({host, port});
   let buffer = '';
   
@@ -27,5 +22,3 @@ const main = async () => {
   });
   await socket.write(JSON.stringify({ command, parameter: args.join(',')}));
 };
-
-main();

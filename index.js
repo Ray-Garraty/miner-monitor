@@ -7,21 +7,27 @@ import {
   formatDataForLog,
 } from './parser.js';
 
-export const hostsIPs = [
-  '192.168.1.7',
-  '192.168.1.8',
-];
-export const port = 4028;
-const localPath = 'C:/Users/Vladimir/Google Drive/Avalon 1066/';
-const interval = 1800000;
+import {
+  hostsIPs,
+  port,
+  folderPath,
+  updateInterval,
+} from './variables.js';
+
 const logBlocksSeparator = ''.padEnd(25, '=');
 
 const command = 'stats';
 
 const main = async (hostIP) => {
-  const statsFilePath = `${localPath}${hostIP}_stats.csv`;
-  const logFilePath = `${localPath}${hostIP}_logs.txt`;
-  const socket = await net.connect({host: hostIP, port});
+  const statsFilePath = `${folderPath}${hostIP}_stats.csv`;
+  const logFilePath = `${folderPath}${hostIP}_logs.txt`;
+  let socket;
+  try {
+    socket = await net.connect({host: hostIP, port});
+  } catch (err) {
+    console.log('Ошибка подключения к IP ', hostIP, err);
+    main(hostIP);
+  }
   let buffer = '';
   
   socket.on('data', (data) => {
@@ -51,7 +57,7 @@ const main = async (hostIP) => {
           logStream.write(formatDataForLog(data));
           logStream.end(`${logBlocksSeparator}\n`);
           console.log('Данные добавлены в файл:', logFilePath);
-          setTimeout(() => main(), interval);
+          setTimeout(() => main(hostIP), updateInterval);
         }
       });
     }
