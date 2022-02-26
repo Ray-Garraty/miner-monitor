@@ -1,23 +1,6 @@
 /* eslint-disable no-control-regex */
-import fs from 'fs';
 import splitPVT from "./splitPVT.js";
-import requestOutdoorTemp from './weather.js';
-
-const readLastTempFromCSV = (filePath) => {
-  const fileData = fs.readFileSync(filePath, 'utf8');
-  const dataArray = fileData.split('\n');
-  return dataArray.find((element) => element.startsWith('OutdoorTemp')).split(';')[1];
-};
-
-const getOutdoorTemp = (lastRequestDateTomeInMs) => {
-  return requestOutdoorTemp();
-  /* const currentDateTimeInMs = Date.now();
-  const minRequestInterval = 28800000; // 8 hours
-  if ((currentDateTimeInMs - lastRequestDateTomeInMs) > minRequestInterval) {
-    return requestOutdoorTemp();
-  }
-  return lastTemp; */
-};
+import readWeather from './weather.js';
 
 const convertBufferToObject = (rawData) => JSON.parse(rawData
     .replace(/-nan/g, '0')
@@ -36,7 +19,7 @@ const formatDataForLog = (data) => {
 };
 
 const formatStatsString = async (logString) => {
-  const outdoorTemp = await getOutdoorTemp();
+  const outdoorTemp = await readWeather();
   const logArray = logString.split(']').map((entry) => entry.trim());
   
   const parseParameter = (parameterName) => {

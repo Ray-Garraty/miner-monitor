@@ -1,5 +1,6 @@
 import fs from 'fs';
 import net from 'net';
+import process from 'process';
 import {
   convertBufferToObject,
   extractStatsString,
@@ -10,12 +11,11 @@ import {
 import {
   hostsIPs,
   port,
-  folderPath,
   updateInterval,
 } from './variables.js';
 
 const logBlocksSeparator = ''.padEnd(25, '=');
-
+const folderPath = process.env.LOCAL_GDRIVE_PATH;
 const command = 'stats';
 
 const main = async (hostIP) => {
