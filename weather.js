@@ -33,6 +33,4 @@ const readWeather = () => {
   return temperature;
 };
 
-saveWeather();
-
-export default readWeather;
+export { saveWeather, readWeather };

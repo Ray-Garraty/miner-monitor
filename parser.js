@@ -1,6 +1,6 @@
 /* eslint-disable no-control-regex */
 import splitPVT from "./splitPVT.js";
-import readWeather from './weather.js';
+import { readWeather } from './weather.js';
 
 const convertBufferToObject = (rawData) => JSON.parse(rawData
     .replace(/-nan/g, '0')
